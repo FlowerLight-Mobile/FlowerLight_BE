@@ -22,7 +22,7 @@ app.use(cors());
 app.use(cookieParser())
 app.use(express.json())
 
-//Routes
+//Routes Auth
 app.use('/api/v1/auth', authRoute)
 
 app.listen(8080, () => {

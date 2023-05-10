@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
 //import router
-const authRoute = require('./routes/auth')
-
+const authRoute = require('./routes/authRoutes')
+const userRoute = require("./routes/userRoutes")
 dotenv.config();
 const app = express()
 
@@ -24,7 +24,7 @@ app.use(express.json())
 
 //Routes Auth
 app.use('/api/v1/auth', authRoute)
-
+app.use("/api/v1/users", userRoute)
 app.listen(8080, () => {
     console.log('Server running.......')
 })

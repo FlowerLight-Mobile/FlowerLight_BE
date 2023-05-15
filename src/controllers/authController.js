@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken')
 const authController = {
     // Signup
     signupUser: async(req, res) => {
@@ -95,7 +95,14 @@ const authController = {
                 res.status(401).json({ message: 'Invalid email or password' })
             }
             if (user && validPassword) {
-                res.status(200).json(user)
+                const token = jwt.sign({
+                        id: user.id,
+                        admin: user.isAdmin
+                    },
+                    process.env.ACCESS_KEY, { expiresIn: '3h' }
+                );
+                const { password, ...other } = user._doc;
+                res.status(200).json({...other, token })
             }
         } catch (err) {
             res.status(500).json(err)

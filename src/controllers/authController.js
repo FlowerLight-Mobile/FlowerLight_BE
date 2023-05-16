@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+
+let refeshTokens = [];
 const authController = {
     // Signup
     signupUser: async(req, res) => {
@@ -78,6 +80,21 @@ const authController = {
             return res.status(500).json(err);
         }
     },
+
+    //ACESSTOKEN
+    generateAccessToken: (user) => {
+        return jwt.sign({
+            id: user.id,
+            admin: user.isAdmin,
+        }, process.env.ACCESS_KEY, { expiresIn: '3h' })
+    },
+    //Refesh Token
+    generateRefeshToken: (user) => {
+        return jwt.sign({
+            id: user.id,
+            admin: user.isAdmin,
+        }, process.env.REFESH_KEY, { expiresIn: '365d' });
+    },
     //Login 
     loginUser: async(req, res) => {
         try {
@@ -95,19 +112,57 @@ const authController = {
                 res.status(401).json({ message: 'Invalid email or password' })
             }
             if (user && validPassword) {
-                const token = jwt.sign({
-                        id: user.id,
-                        admin: user.isAdmin
-                    },
-                    process.env.ACCESS_KEY, { expiresIn: '3h' }
-                );
+
+                const token = authController.generateAccessToken(user);
+                const refeshToken = authController.generateRefeshToken(user)
+                refeshTokens.push(refeshToken);
+                //Luu cookie
+                res.cookie("refeshToken", refeshToken, {
+                    httpOnly: true,
+                    //secure: false,
+                    path: '/',
+                    sameSite: 'strict',
+                });
                 const { password, ...other } = user._doc;
                 res.status(200).json({...other, token })
             }
         } catch (err) {
             res.status(500).json(err)
         }
-    }
+    },
+    //RequestToken
+    requestRefeshToken: async(req, res) => {
+        //Take refesh token from user
+        const refeshToken = req.cookies.refeshToken;
+        if (!refeshToken)
+            return res.status(401).json({ message: 'You are not authenticated !' });
+        if (!refeshTokens.includes(refeshToken)) {
+            return res.status(403).json("Refesh Token is not valid !")
+        }
+        jwt.verify(refeshToken, process.env.REFESH_KEY, (err, user) => {
+            if (err) {
+                console.log(err)
+            }
+            refeshTokens = refeshTokens.filter((token) => token !== refeshToken)
+                //create new access and refesh token
+            const newAccessToken = authController.generateAccessToken(user);
+            const newrefeshToken = authController.generateRefeshToken(user);
 
+            refeshTokens.push(newrefeshToken);
+            res.cookie("refeshToken", newrefeshToken, {
+                httpOnly: true,
+                //secure: false,
+                path: '/',
+                sameSite: 'strict',
+            });
+            res.status(200).json({ token: newAccessToken })
+        })
+
+    },
+    userLogout: async(req, res) => {
+        res.clearCookie('refeshToken');
+        refeshTokens = refeshTokens.filter((token) => token !== req.cookies.refeshToken)
+        res.status(200).json({ message: 'Logout Successfully !' })
+    }
 }
 module.exports = authController;

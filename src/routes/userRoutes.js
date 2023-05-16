@@ -7,7 +7,7 @@ const router = require("express").Router();
 router.get("/", middlewareController.verifyToken, userController.getAllUsers);
 
 //Get User by ID
-router.get("/user/:id", userController.getUser);
+router.get("/user/:id", middlewareController.verifyToken, userController.getUser);
 
 //Update Password
 router.put("/user/:id/change-password", middlewareController.verifyToken, userController.changePassword);

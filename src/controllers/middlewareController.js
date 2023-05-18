@@ -28,6 +28,15 @@ const middlewareController = {
                 res.status(403).json({ message: 'You are not allowed to delete other !' })
             }
         })
+    },
+    verifyTokenAdminFunction: (req, res, next) => {
+        middlewareController.verifyToken(req, res, () => {
+            if (req.user.admin) {
+                next();
+            } else {
+                res.status(403).json({ message: 'You cannot perform this function !' })
+            }
+        })
     }
 };
 module.exports = middlewareController;

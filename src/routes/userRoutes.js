@@ -4,7 +4,7 @@ const userController = require("../controllers/userController");
 const router = require("express").Router();
 
 //Get All User
-router.get("/", middlewareController.verifyToken, userController.getAllUsers);
+router.get("/", middlewareController.verifyTokenAdminFunction, userController.getAllUsers);
 
 //Get User by ID
 router.get("/user/:id", middlewareController.verifyToken, userController.getUser);

@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 //import router
 const authRoute = require('./routes/authRoutes')
 const userRoute = require("./routes/userRoutes")
+const productRoute = require('./routes/productRoutes')
+
 dotenv.config();
 const app = express()
 
@@ -25,6 +27,7 @@ app.use(express.json())
 //Routes Auth
 app.use('/api/v1/auth', authRoute)
 app.use("/api/v1/users", userRoute)
+app.use("/api/v1/products", productRoute)
 app.listen(8080, () => {
     console.log('Server running.......')
 })

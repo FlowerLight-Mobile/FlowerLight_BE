@@ -23,6 +23,8 @@ mongoose.connect(process.env.MONGODB_URL)
 app.use(cors());
 app.use(cookieParser())
 app.use(express.json())
+app.use('/public/uploads', express.static('public/uploads'));
+
 
 //Routes Auth
 app.use('/api/v1/auth', authRoute)

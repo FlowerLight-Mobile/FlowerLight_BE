@@ -102,7 +102,7 @@ const authController = {
                 email: req.body.email
             });
             if (!user) {
-                res.status(404).json({ message: "Email or Password is incorrect" })
+                res.status(401).json({ message: "Email or Password is incorrect" })
             }
             const validPassword = await bcrypt.compare(
                 req.body.password,

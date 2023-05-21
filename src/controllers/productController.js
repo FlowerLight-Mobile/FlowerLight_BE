@@ -118,6 +118,8 @@ const productController = {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
     },
+
+
     getProducts: async(req, res) => {
         try {
             const products = await Product.find()
@@ -125,7 +127,39 @@ const productController = {
         } catch (err) {
             res.status(500).json(err)
         }
+    },
+    getProductbById: async(req, res) => {
+        try {
+            const product = await Product.findById(req.params.id)
+            if (product) {
+                res.status(200).json(product)
+            } else {
+                return res.status(401).json({ message: 'Product does not exist !' });
+            }
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    },
+    updateProduct: async(req, res) => {
+        try {
+
+        } catch (err) {
+
+        }
+    },
+    deleteProduct: async(req, res) => {
+        try {
+            const product = await Product.findByIdAndDelete(req.params.id)
+            if (!product) {
+                return res.status(401).json({ message: 'Product does not exist !' })
+            } else {
+                res.status(200).json({ message: 'Delete Product Successfully !' })
+            }
+        } catch (err) {
+            res.status(500).json(err)
+        }
     }
 };
+
 
 module.exports = productController;

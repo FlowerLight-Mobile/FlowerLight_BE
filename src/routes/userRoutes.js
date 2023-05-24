@@ -11,7 +11,7 @@ router.get("/user/:id", middlewareController.verifyToken, userController.getUser
 //Update information User
 router.put("/user/update-info/:id", middlewareController.verifyTokenUser, userController.updateInfoUser);
 //Change Password
-router.put("/user/:id/change-password", middlewareController.verifyTokenUser, userController.changePassword);
+router.put("/user/change-password/:id", middlewareController.verifyTokenUser, userController.changePassword);
 //Reset Pasword 
 
 //DELETE User

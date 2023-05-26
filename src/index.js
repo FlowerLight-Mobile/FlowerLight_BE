@@ -5,10 +5,10 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
 //import router
-const authRoute = require('./routes/authRoutes')
-const userRoute = require("./routes/userRoutes")
-const productRoute = require('./routes/productRoutes')
-
+const authRoute = require('./routes/authRoutes');
+const userRoute = require("./routes/userRoutes");
+const productRoute = require('./routes/productRoutes');
+const orderRoute = require('./routes/orderRoutes');
 dotenv.config();
 const app = express()
 
@@ -30,6 +30,7 @@ app.use('/public/uploads', express.static('public/uploads'));
 app.use('/api/v1/auth', authRoute)
 app.use("/api/v1/users", userRoute)
 app.use("/api/v1/products", productRoute)
+app.use("/api/v1/orders", orderRoute)
 app.listen(8080, () => {
     console.log('Server running.......')
 })

@@ -10,11 +10,11 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    Address1: {
+    address1: {
         type: String,
         require: true
     },
-    Address2: {
+    address2: {
         type: String,
     },
     city: {

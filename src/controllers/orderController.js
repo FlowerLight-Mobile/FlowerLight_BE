@@ -40,6 +40,18 @@ const orderController = {
         } catch (err) {
             res.status(500).json(err)
         }
+    },
+    getAllOrder: async(req, res) => {
+        try {
+            const orderList = await Order.find().populate('user', 'name').sort({ 'dateOrdered': -1 });
+            if (orderList.length === 0) {
+                return res.status(400).json({ message: 'Order List Not Found!' });
+            } else {
+                return res.status(200).json(orderList);
+            }
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
     }
 }
 module.exports = orderController

@@ -1,5 +1,6 @@
 const express = require('express');
 const OrderItem = require('../models/OrderItem');
+const { Order } = require('../models/Orders');
 
 const orderController = {
     createOrder: async(req, res) => {
@@ -21,10 +22,23 @@ const orderController = {
             }))
 
             const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
-
+            let order = new Order({
+                orderItems: orderItemsIdsResolved,
+                phone: req.body.phone,
+                address1: req.body.address1,
+                address2: req.body.address2,
+                city: req.body.city,
+                totalPrice: totalPrice,
+                user: req.body.user
+            })
+            order = await order.save();
+            if (!order) {
+                return res.status(400).json({ message: 'Cannot Order !' })
+            } else {
+                return res.status(200).json({ message: 'Order Successfully !', order })
+            }
         } catch (err) {
-            return res.status(500).json({ message: 'Internal Server Error' });
-
+            res.status(500).json(err)
         }
     }
 }

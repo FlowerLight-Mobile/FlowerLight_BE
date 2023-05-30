@@ -98,7 +98,7 @@ const productController = {
                     return res.status(400).json({ message: 'Price Product (0-9999)!' });
                 }
                 if (req.body.countInStock.length > 4 || req.body.countInStock < 0 || req.body.countInStock > 999) {
-                    return res.status(400).json({ message: 'Count In Stock (0-999)!' });
+                    return res.status(400).json({ message: 'Count In Stock (0-998)!' });
                 }
 
                 const newProduct = await new Product({

@@ -185,10 +185,6 @@ const productController = {
                     return res.status(400).json({ message: 'Name is required!' });
                 }
 
-                if (!req.body.takeCare) {
-                    return res.status(400).json({ message: 'Take Care is required!' });
-                }
-
                 if (!req.body.localProduct) {
                     return res.status(400).json({ message: 'Local My Product is required!' });
                 }
